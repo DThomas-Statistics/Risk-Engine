@@ -1,3 +1,6 @@
+import numpy as np
+from scipy.stats import norm, t
+
 def hist_risk(percent_vec,alpha):
   if len(percent_vec) <100:
     print(f"lack of data may lead to insufficient statistical reliability")
