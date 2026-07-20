@@ -1,4 +1,4 @@
-ef hist_risk(percent_vec,alpha):
+def hist_risk(percent_vec,alpha):
   if len(percent_vec) <100:
     print(f"lack of data may lead to insufficient statistical reliability")
   w = np.sort(percent_vec)
