@@ -49,3 +49,86 @@ def EWMA(percent, weight, value, alpha):
   sigma = np.sqrt(weight.T@cov@weight)
   VaR = -sigma*norm.ppf(alpha)*value
   return VaR
+
+def findGARCH(percent_vec):
+  #the goal here is to create a function taht will use AIC to find an optimum GARCH based model
+  GARCH_model_N_1 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=0, power= 2.0, dist = 'normal', rescale = True)
+  GARCH_model_t_1 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=0, power= 2.0, dist = 'StudentsT', rescale = True)
+  GARCH_model_N_2 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=0, power= 2.0, dist = 'normal', rescale = True)
+  GARCH_model_t_2 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=0, power= 2.0, dist = 'StudentsT', rescale = True)
+  GARCH_model_N_3 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=0, power= 2.0, dist = 'normal', rescale = True)
+  GARCH_model_t_3 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=0, power= 2.0, dist = 'StudentsT', rescale = True)
+  EGARCH_t = arch_model(percent_vec,mean = 'constant', lags=0, vol='EGARCH', p=1, q=1, o=1, dist = 'StudentsT', rescale = True)
+  EGARCH_N = arch_model(percent_vec,mean = 'constant', lags=0, vol='EGARCH', p=1, q=1, o=1, dist = 'Normal', rescale = True)
+  TGARCH_model_t_1 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 1.0, dist = 'StudentsT', rescale = True)
+  TGARCH_model_N_2 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=1, power= 1.0, dist = 'normal', rescale = True)
+  TGARCH_model_t_2 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=1, power= 1.0, dist = 'StudentsT', rescale = True)
+  TGARCH_model_N_3 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=1, power= 1.0, dist = 'normal', rescale = True)
+  TGARCH_model_t_3 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=1, power= 1.0, dist = 'StudentsT', rescale = True)
+  GJR_GARCH_t_1 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'StudentsT', rescale = True)
+  GJR_GARCH_N_1 = arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'Normal', rescale = True)
+
+  GARCH_model_N_1=GARCH_model_N_1.fit(disp='off')
+  GARCH_model_N_2=GARCH_model_N_2.fit(disp='off')
+  GARCH_model_N_3=GARCH_model_N_3.fit(disp='off')
+  GARCH_model_t_1=GARCH_model_t_1.fit(disp='off')
+  GARCH_model_t_2=GARCH_model_t_2.fit(disp='off')
+  GARCH_model_t_3=GARCH_model_t_3.fit(disp='off')
+  EGARCH_t=EGARCH_t.fit(disp='off')
+  EGARCH_N=EGARCH_N.fit(disp='off')
+  TGARCH_model_t_1=TGARCH_model_t_1.fit(disp='off')
+  TGARCH_model_N_2=TGARCH_model_N_2.fit(disp='off')
+  TGARCH_model_t_2=TGARCH_model_t_2.fit(disp='off')
+  TGARCH_model_N_3=TGARCH_model_N_3.fit(disp='off')
+  TGARCH_model_t_3=TGARCH_model_t_3.fit(disp='off')
+  GJR_GARCH_t_1=GJR_GARCH_t_1.fit(disp='off')
+  GJR_GARCH_N_1=GJR_GARCH_N_1.fit(disp='off')
+  
+  
+  
+
+
+  models = {"GARCH_model_N_1":(GARCH_model_N_1.loglikelihood,GARCH_model_N_1.num_params),
+            "GARCH_model_N_2":(GARCH_model_N_2.loglikelihood,GARCH_model_N_2.num_params),
+            "GARCH_model_N_3":(GARCH_model_N_3.loglikelihood,GARCH_model_N_3.num_params),
+            "GARCH_model_t_1":(GARCH_model_t_1.loglikelihood,GARCH_model_t_1.num_params),
+            "GARCH_model_t_2":(GARCH_model_t_2.loglikelihood,GARCH_model_t_2.num_params),
+            "GARCH_model_t_3":(GARCH_model_t_3.loglikelihood,GARCH_model_t_3.num_params),
+            "EGARCH_t":(EGARCH_t.loglikelihood,EGARCH_t.num_params),
+            "EGARCH_N":(EGARCH_N.loglikelihood,EGARCH_N.num_params),
+            "TGARCH_model_t_1":(TGARCH_model_t_1.loglikelihood,TGARCH_model_t_1.num_params),
+            "TGARCH_model_N_2":(TGARCH_model_N_2.loglikelihood,TGARCH_model_N_2.num_params),
+            "TGARCH_model_t_2":(TGARCH_model_t_2.loglikelihood,TGARCH_model_t_2.num_params),
+            "TGARCH_model_N_3":(TGARCH_model_N_3.loglikelihood,TGARCH_model_N_3.num_params),
+            "TGARCH_model_t_3":(TGARCH_model_t_3.loglikelihood,TGARCH_model_t_3.num_params),
+            "GJR_GARCH_t_1":(GJR_GARCH_t_1.loglikelihood,GJR_GARCH_t_1.num_params),
+            "GJR_GARCH_N_1":(GJR_GARCH_N_1.loglikelihood,GJR_GARCH_N_1.num_params)}
+
+  scoreS = {}
+  fitted_objects = {
+        "GARCH_model_N_1": GARCH_model_N_1, "GARCH_model_N_2": GARCH_model_N_2, "GARCH_model_N_3": GARCH_model_N_3,
+        "GARCH_model_t_1": GARCH_model_t_1, "GARCH_model_t_2": GARCH_model_t_2, "GARCH_model_t_3": GARCH_model_t_3,
+        "EGARCH_t": EGARCH_t, "EGARCH_N": EGARCH_N,
+        "TGARCH_model_t_1": TGARCH_model_t_1, "TGARCH_model_N_2": TGARCH_model_N_2, "TGARCH_model_t_2": TGARCH_model_t_2,
+        "TGARCH_model_N_3": TGARCH_model_N_3, "TGARCH_model_t_3": TGARCH_model_t_3,
+        "GJR_GARCH_t_1": GJR_GARCH_t_1, "GJR_GARCH_N_1": GJR_GARCH_N_1}
+
+  for name, (ll,n) in models.items():
+    AIC = 2*n -2*ll
+    
+    BIC = n*np.log(len(percent_vec))- 2*ll
+    scoreS[name] = {"AIC": AIC, "BIC": BIC}
+
+    #getting the optimal model via smallest AIC value
+  o_modelA = min(scoreS, key=lambda m: scoreS[m]["AIC"])
+  o_modelB = min(scoreS, key=lambda m: scoreS[m]["BIC"])
+  if o_modelA!=o_modelB:
+      print("AIC and BIC do not agree so we will use model following BIC as its stricter")
+      chosen_model = o_modelB
+      return fitted_objects[chosen_model]
+  else:
+    print(f"agreeing AIC and BIC so {o_modelA}")
+    chosen_model = o_modelA
+    
+
+    return fitted_objects[chosen_model]
