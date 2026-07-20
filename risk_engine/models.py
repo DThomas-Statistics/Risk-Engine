@@ -24,7 +24,7 @@ def normal_riskp(value, alpha, weight, percent):
   print(f"The normal {alpha*100}% Expected shortfall for {percent.shape[1]} days is: {ES}")
   return VaR, ES
 
-ef student_risk(value, alpha, weight, percent, kurtosis):
+def student_risk(value, alpha, weight, percent, kurtosis):
   DF = (6/kurtosis)+4
   sd =  np.sqrt(weight.T@np.cov(percent, rowvar=True)@ weight)
   VaR = -sd*t.ppf(alpha,DF)*value
