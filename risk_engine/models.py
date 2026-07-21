@@ -38,17 +38,6 @@ def student_risk(value, alpha, weight, percent, kurtosis):
   print(f"The t dist {alpha*100}% Expected shortfall for {percent.shape[1]} days is: {ES}")
   return VaR, ES
 
-def EWMA(percent, weight, value, alpha):
-  T = percent.shape[1]
-  l = 0.94
-  cov =  np.cov(percent, rowvar=True)
-  for t in range(1,T):
-    returns_at_t_minus_1 = percent[:, t-1].reshape(-1, 1) # Make it a column vector
-    cov = l * cov + (1 - l) * (returns_at_t_minus_1 @ returns_at_t_minus_1.T)
-
-  sigma = np.sqrt(weight.T@cov@weight)
-  VaR = -sigma*norm.ppf(alpha)*value
-  return VaR
 
 def findGARCH(percent_vec):
   #the goal here is to create a function taht will use AIC to find an optimum GARCH based model
@@ -83,9 +72,9 @@ def findGARCH(percent_vec):
   TGARCH_model_t_3=TGARCH_model_t_3.fit(disp='off')
   GJR_GARCH_t_1=GJR_GARCH_t_1.fit(disp='off')
   GJR_GARCH_N_1=GJR_GARCH_N_1.fit(disp='off')
-  
-  
-  
+
+
+
 
 
   models = {"GARCH_model_N_1":(GARCH_model_N_1.loglikelihood,GARCH_model_N_1.num_params),
@@ -115,13 +104,14 @@ def findGARCH(percent_vec):
 
   for name, (ll,n) in models.items():
     AIC = 2*n -2*ll
-    
+
     BIC = n*np.log(len(percent_vec))- 2*ll
     scoreS[name] = {"AIC": AIC, "BIC": BIC}
 
     #getting the optimal model via smallest AIC value
   o_modelA = min(scoreS, key=lambda m: scoreS[m]["AIC"])
   o_modelB = min(scoreS, key=lambda m: scoreS[m]["BIC"])
+  
   if o_modelA!=o_modelB:
       print("AIC and BIC do not agree so we will use model following BIC as its stricter")
       chosen_model = o_modelB
@@ -129,6 +119,44 @@ def findGARCH(percent_vec):
   else:
     print(f"agreeing AIC and BIC so {o_modelA}")
     chosen_model = o_modelA
-    
+
 
     return fitted_objects[chosen_model]
+
+
+def compute_garch_risk(o_model, alpha, value, T):
+  res=o_model.fit()
+  #DF = res.params['nu']
+  forecasts = res.forecast()
+  f_v=forecasts.variance.iloc[-1,0]
+  f_SD =np.sqrt(f_v)
+  #VaR_N= f_SD*norm.ppf(alpha)*value
+  #VaR_t=f_SD*t.ppf(alpha,DF)*value
+  #VaR_N_over_days = VaR_N*np.sqrt(T)
+  #VaR_t_over_days = VaR_t*np.sqrt(T)
+
+  #ES
+  #ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))*value
+  #ES_N= -*f_SD*norm.pdf(norm.ppf(alpha))/alpha *value
+  #Now consider multio day VaR
+  #ES_t_over_days = ES_t *np.sqrt(T)
+  #ES_N_over_days =ES_N * np.sqrt(T)
+
+
+  if 'nu' in res.params:
+    DF = res.params['nu']
+    VaR_t=-f_SD*t.ppf(alpha,DF)*value
+    VaR_t_over_days = VaR_t*np.sqrt(T)
+    ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))*value
+    ES_t_over_days = ES_t *np.sqrt(T)
+    return VaR_t_over_days, ES_t_over_days
+
+  else:
+    VaR_N= f_SD*norm.ppf(alpha)*value
+    VaR_N_over_days = VaR_N*np.sqrt(T)
+    ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha *value
+    ES_N_over_days =ES_N * np.sqrt(T)
+    return VaR_N_over_days,ES_N_over_days
+
+
+  #return VaR_N_over_days,VaR_t_over_days,ES_t_over_days,ES_N_over_days
