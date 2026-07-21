@@ -152,7 +152,7 @@ def compute_garch_risk(o_model, alpha, value, T):
     return VaR_t_over_days, ES_t_over_days
 
   else:
-    VaR_N= f_SD*norm.ppf(alpha)*value
+    VaR_N= -f_SD*norm.ppf(alpha)*value
     VaR_N_over_days = VaR_N*np.sqrt(T)
     ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha *value
     ES_N_over_days =ES_N * np.sqrt(T)
