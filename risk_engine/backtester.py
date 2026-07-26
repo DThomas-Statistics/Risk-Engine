@@ -1,11 +1,17 @@
 #https://tutorialreference.com/python/examples/faq/python-how-to-find-index-of-element-of-list-that-meet-a-condition
+#def first_drop_point(data_list, threshold):
+ #   sorted_list = sorted(data_list)
+ #   for idx, value in enumerate(sorted_list):
+  #      if value < threshold:
+  #          return idx
+  #  return None
+
 def first_drop_point(data_list, threshold):
     sorted_list = sorted(data_list)
     for idx, value in enumerate(sorted_list):
-        if value < threshold:
+        if value > threshold:
             return idx
-    return None
-
+    return len(sorted_list) 
 def ES_error(values, ES_val):
   sort_val = np.sort(values)
 
