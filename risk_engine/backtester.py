@@ -1,3 +1,20 @@
+#https://tutorialreference.com/python/examples/faq/python-how-to-find-index-of-element-of-list-that-meet-a-condition
+def first_drop_point(data_list, threshold):
+    sorted_list = sorted(data_list)
+    for idx, value in enumerate(sorted_list):
+        if value < threshold:
+            return idx
+    return None 
+                         
+def ES_error(values, ES_val):
+  sort_val = np.sort(values)
+
+  n_H = first_drop_point(values, ES_val)
+  below_vals = sort_val[:n_H]
+  k_H = np.mean(below_vals)
+  E_H = abs(k_H) - abs(ES_val)
+  return E_H
+
 def backtest(hist_percent_vec, BURNIN,alpha):
   ASSIST_FINDGARCH = hist_percent_vec[0:BURNIN]
   o_model=findGARCH(ASSIST_FINDGARCH)
@@ -16,6 +33,15 @@ def backtest(hist_percent_vec, BURNIN,alpha):
         "H_VaR":[],
         "G_VaR":[],
         }
+
+  BR_H=[]
+  BR_N=[]
+  BR_T=[]
+  BR_G=[]
+  ES_E_H=[]
+  ES_E_N=[]
+  ES_E_T=[]
+  ES_E_G=[]      
   for t in range(BURNIN,len(hist_percent_vec)):
     t1=t-BURNIN
     t2 =t
@@ -58,5 +84,26 @@ def backtest(hist_percent_vec, BURNIN,alpha):
     else:
       di["G_breachoVaR"].append(0)
 
+    if t%100==0:
+      values = hist_percent_vec[t-BURNIN:t]
+      total_D =len(di["H_breachoVaR"])
+      #Historical
+      H_ES=di["H_ES"][-1]
+      ES_E_H.append(E_H=ES_error(values, H_ES))
+      BR_H.append(H_BR = sum(di["H_breachoVaR"])/total_D)
 
+      #Normal
+      N_ES=di["N_ES"][-1]
+      ES_E_N.append(E_N=ES_error(values, N_ES))
+      BR_N.append(N_BR = sum(di["N_breachoVaR"])/total_D)
+      #Student
+      T_ES=di["T_ES"][-1]
+      ES_E_T.append(E_S=ES_error(values, T_ES))
+      BR_T.append(S_BR = sum(di["T_breachoVaR"])/total_D)
+      #GARCH
+      G_ES=di["G_ES"][-1]
+      ES_E_G.append(E_G=ES_error(values, G_ES))
+      BR_G.append(G_BR = sum(di["G_breachoVaR"])/total_D)
 
+    return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G
+      
