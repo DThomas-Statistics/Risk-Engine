@@ -126,7 +126,7 @@ def findGARCH(percent_vec):
 
 def compute_garch_risk(o_model, alpha,window):
   vol_type = o_model.model.volatility
-  dist_type = o.model.distribution
+  dist_type = o_model.model.distribution
   Model = arch_model(window,mean = 'constant', lags=0, vol = vol_type, p=o_model_model.volatility.p, q=o_model.model.volatility.q, o=o_model.model.volatility.o, power=o_model.model.volatility.power, dist = dist_type, rescale = True)
   res=Model.fit()
   vol_type = res.model.volatility
