@@ -14,26 +14,26 @@ def hist_risk(percent_vec,alpha):
   print(f"The historical {alpha*100}% Expected shortfall for {len(percent_vec)} days is: {E_SF}")
   return VaR, E_SF
 
-def normal_riskp(value, alpha, weight, percent):
+def normal_riskp(alpha, weight, percent):
   #drift = np.mean(port_vec)
   #vol = np.sd(port_vec)
   sd =  np.sqrt(weight.T@np.cov(percent, rowvar=True)@ weight)
-  VaR = -sd*norm.ppf(alpha)*value
+  VaR = -sd*norm.ppf(alpha)
 
   #ES
-  ES= sd*norm.pdf(norm.ppf(alpha))/alpha *value
+  ES= sd*norm.pdf(norm.ppf(alpha))/alpha
 
   print(f"The normal {alpha*100}% VaR for {percent.shape[1]} days is: {VaR}")
   print(f"The normal {alpha*100}% Expected shortfall for {percent.shape[1]} days is: {ES}")
   return VaR, ES
 
-def student_risk(value, alpha, weight, percent, kurtosis):
+def student_risk(alpha, weight, percent, kurtosis):
   DF = (6/kurtosis)+4
   sd =  np.sqrt(weight.T@np.cov(percent, rowvar=True)@ weight)
-  VaR = -sd*t.ppf(alpha,DF)*value
+  VaR = -sd*t.ppf(alpha,DF)
 
   #ES
-  ES = sd*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))*value
+  ES = sd*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))
   print(f"The t dist {alpha*100}% VaR for {percent.shape[1]} days is: {VaR}")
   print(f"The t dist {alpha*100}% Expected shortfall for {percent.shape[1]} days is: {ES}")
   return VaR, ES
@@ -124,8 +124,12 @@ def findGARCH(percent_vec):
     return fitted_objects[chosen_model]
 
 
-def compute_garch_risk(o_model, alpha, value, T):
-  res=o_model.fit()
+def compute_garch_risk(o_model, alpha,window):
+  vol_type = o_model.model.volatility
+  dist_type = o.model.distribution
+  Model = arch_model(window,mean = 'constant', lags=0, vol = vol_type, p=o_model_model.volatility.p, q=o_model.model.volatility.q, o=o_model.model.volatility.o, power=o_model.model.volatility.power, dist = dist_type, rescale = True)
+  res=Model.fit()
+  vol_type = res.model.volatility
   #DF = res.params['nu']
   forecasts = res.forecast()
   f_v=forecasts.variance.iloc[-1,0]
@@ -145,18 +149,19 @@ def compute_garch_risk(o_model, alpha, value, T):
 
   if 'nu' in res.params:
     DF = res.params['nu']
-    VaR_t=-f_SD*t.ppf(alpha,DF)*value
-    VaR_t_over_days = VaR_t*np.sqrt(T)
-    ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))*value
-    ES_t_over_days = ES_t *np.sqrt(T)
-    return VaR_t_over_days, ES_t_over_days
+    VaR_t=-f_SD*t.ppf(alpha,DF)
+    VaR_t_over_days = VaR_t
+    ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))
+    ES_t_over_days = ES_t 
+    return VaR_t_over_days, ES_t_over_days, res
 
   else:
-    VaR_N= -f_SD*norm.ppf(alpha)*value
-    VaR_N_over_days = VaR_N*np.sqrt(T)
-    ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha *value
-    ES_N_over_days =ES_N * np.sqrt(T)
-    return VaR_N_over_days,ES_N_over_days
+    VaR_N= -f_SD*norm.ppf(alpha)
+    VaR_N_over_days = VaR_N
+    ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha 
+    ES_N_over_days =ES_N
+    return VaR_N_over_days,ES_N_over_days, res
 
 
   #return VaR_N_over_days,VaR_t_over_days,ES_t_over_days,ES_N_over_days
+s
