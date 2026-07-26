@@ -164,4 +164,3 @@ def compute_garch_risk(o_model, alpha,window):
 
 
   #return VaR_N_over_days,VaR_t_over_days,ES_t_over_days,ES_N_over_days
-s
