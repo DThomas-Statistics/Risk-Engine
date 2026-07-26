@@ -90,20 +90,22 @@ def backtest(hist_percent_vec, BURNIN,alpha):
       #Historical
       H_ES=di["H_ES"][-1]
       ES_E_H.append(E_H=ES_error(values, H_ES))
-      BR_H.append(H_BR = sum(di["H_breachoVaR"])/total_D)
+      BR_H.append(sum(di["H_breachoVaR"])/total_D)
 
       #Normal
       N_ES=di["N_ES"][-1]
       ES_E_N.append(E_N=ES_error(values, N_ES))
-      BR_N.append(N_BR = sum(di["N_breachoVaR"])/total_D)
+      BR_N.append(sum(di["N_breachoVaR"])/total_D)
       #Student
       T_ES=di["T_ES"][-1]
       ES_E_T.append(E_S=ES_error(values, T_ES))
-      BR_T.append(S_BR = sum(di["T_breachoVaR"])/total_D)
+      BR_T.append(sum(di["T_breachoVaR"])/total_D)
       #GARCH
       G_ES=di["G_ES"][-1]
       ES_E_G.append(E_G=ES_error(values, G_ES))
-      BR_G.append(G_BR = sum(di["G_breachoVaR"])/total_D)
+      BR_G.append(sum(di["G_breachoVaR"])/total_D)
 
     return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G
+      
+
       
