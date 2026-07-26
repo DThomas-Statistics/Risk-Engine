@@ -4,8 +4,8 @@ def first_drop_point(data_list, threshold):
     for idx, value in enumerate(sorted_list):
         if value < threshold:
             return idx
-    return None 
-                         
+    return None
+
 def ES_error(values, ES_val):
   sort_val = np.sort(values)
 
@@ -41,7 +41,7 @@ def backtest(hist_percent_vec, BURNIN,alpha):
   ES_E_H=[]
   ES_E_N=[]
   ES_E_T=[]
-  ES_E_G=[]      
+  ES_E_G=[]
   for t in range(BURNIN,len(hist_percent_vec)):
     t1=t-BURNIN
     t2 =t
@@ -58,7 +58,7 @@ def backtest(hist_percent_vec, BURNIN,alpha):
     else:
       di["H_breachoVaR"].append(0)
 
-    N_VaR, N_E_SF=Normal_riskp(window,alpha)
+    N_VaR, N_E_SF=normal_riskp(alpha,window)
     di["N_VaR"].append(N_VaR)
     di["N_ES"].append(N_E_SF)
     if hist_percent_vec[t] <-N_VaR:
@@ -66,16 +66,16 @@ def backtest(hist_percent_vec, BURNIN,alpha):
     else:
       di["N_breachoVaR"].append(0)
 
-    t_VaR, t_E_SF=student_risk(window,alpha)
+    t_VaR, t_E_SF=student_risk(alpha, window)
     di["T_VaR"].append(t_VaR)
     di["T_ES"].append(t_E_SF)
     if hist_percent_vec[t] <-t_VaR:
       di["T_breachoVaR"].append(1)
     else:
       di["T_breachoVaR"].append(0)
-      
-      
-      
+
+
+
     G_VaR, G_E_SF, o_model=compute_garch_risk(o_model, alpha,window)
     di["G_VaR"].append(G_VaR)
     di["G_ES"].append(G_E_SF)
@@ -105,4 +105,4 @@ def backtest(hist_percent_vec, BURNIN,alpha):
       ES_E_G.append(ES_error(values, G_ES))
       BR_G.append(sum(di["G_breachoVaR"])/total_D)
 
-    return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G
+  return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G
