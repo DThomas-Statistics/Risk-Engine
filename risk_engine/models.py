@@ -1,3 +1,10 @@
+import numpy as np
+from scipy.stats import norm
+from scipy.stats import t
+from arch import atch_model
+from utils import portfolio_vec
+
+
 def hist_risk(percent_vec,alpha):
   if len(percent_vec) <100:
     print(f"lack of data may lead to insufficient statistical reliability")
@@ -131,8 +138,8 @@ def compute_garch_risk(o_model, alpha,window):
   vol_type = o_model.model.volatility.name
   dist_type = o_model.model.distribution.name
   power_val = getattr(o_model.model.volatility, 'power', 2.0)
-  Model = arch_model(window,mean = 'constant', lags=0, vol = vol_type, p=o_model.model.volatility.p, q=o_model.model.volatility.q, o=o_model.model.volatility.o, power=power_val, dist = dist_type, rescale = True)
-  res=Model.fit()
+  Model = arch_model(window,mean = 'constant', lags=0, vol = vol_type, p=o_model.model.volatility.p, q=o_model.model.volatility.q, o=o_model.model.volatility.o, power=power_val, dist = dist_type, rescale = False)
+  res=Model.fit(disp='off')
   vol_type = res.model.volatility
   #DF = res.params['nu']
   forecasts = res.forecast()
