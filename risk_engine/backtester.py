@@ -1,5 +1,6 @@
 import numpy as np
 from models import hist_risk, normal_riskp, student_risk, findGARCH, compute_garch_risk
+from utils import portfolio_vec
 
 #https://tutorialreference.com/python/examples/faq/python-how-to-find-index-of-element-of-list-that-meet-a-condition
 #def first_drop_point(data_list, threshold):
