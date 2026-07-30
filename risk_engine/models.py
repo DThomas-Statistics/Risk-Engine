@@ -1,8 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 from scipy.stats import t
-from arch import atch_model
-from utils import portfolio_vec
+from arch import arch_model
 
 
 def hist_risk(percent_vec,alpha):
