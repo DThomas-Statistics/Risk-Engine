@@ -1,13 +1,13 @@
 # Risk-Engine
 
-##Project Overview
+## Project Overview
 
 This project provides the framework to compute Value at Risk (VaR) and Expected Shortfall (ES) of a portfolio, enabling the user to conduct their own risk analysis. It includes three baseline models: Historical, Normal and Student-t as well as a dynamic volatility model selected through an AIC/BIC tournament to identify the optimal GARCH. 
 
 In addition to computing these models, the project includes a backtesting function and statistical hypothesis tests such as Proportion of Failures (POF) and Christoffersen Independence Test (CIT) to evaluate the risk engine.
 
 
-##About the Author
+## About the Author
 
 This project was developed as the start of my coding portfolio to assist me in job applications. I hold a BSc in Mathematics with Statistics for Finance (First) from the University of Bristol, and will progress to an MSc in Engineering Mathematics. Furthermore, I wanted this project to strengthen my ability in python as well as showcase my statistical ability on real-data.
 
