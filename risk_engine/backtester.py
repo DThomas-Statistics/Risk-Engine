@@ -1,3 +1,5 @@
+import numpy as np
+
 #https://tutorialreference.com/python/examples/faq/python-how-to-find-index-of-element-of-list-that-meet-a-condition
 #def first_drop_point(data_list, threshold):
  #   sorted_list = sorted(data_list)
