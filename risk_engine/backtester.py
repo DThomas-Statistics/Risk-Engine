@@ -111,4 +111,4 @@ def backtest(hist_percent_vec, BURNIN,alpha):
       ES_E_G.append(ES_error(values, G_ES))
       BR_G.append(sum(di["G_breachoVaR"])/total_D)
 
-  return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G
+  return ES_E_H,ES_E_N,ES_E_T,ES_E_G,BR_H,BR_N,BR_T,BR_G,di
