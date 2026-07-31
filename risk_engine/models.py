@@ -187,8 +187,8 @@ def findGARCH(percent_vec):
   return successful_fitted_models[chosen_model]
 
 
-def compute_garch_risk(o_model, alpha,window):
-  current_o_model = o_model  
+def compute_garch_risk(o_model, alpha, window):
+    current_o_model = o_model  
     try:
         from arch.univariate import EGARCH
         if isinstance(current_o_model.model.volatility, EGARCH):
@@ -201,7 +201,7 @@ def compute_garch_risk(o_model, alpha,window):
     dist_name_from_model = current_o_model.model.distribution.name
     if dist_name_from_model == "Normal":
         dist_arg = "normal"
-    elif dist_name_from_model in[ "StudentT", "Standardized Student's t"]:
+    elif dist_name_from_model in ["StudentT", "Standardized Student's t"]:
         dist_arg = "studentst"  
     else:
         dist_arg = dist_name_from_model.lower() 
@@ -209,14 +209,14 @@ def compute_garch_risk(o_model, alpha,window):
     power_val = getattr(current_o_model.model.volatility, 'power', 2.0)
     p_val = current_o_model.model.volatility.p
     q_val = current_o_model.model.volatility.q
-    o_val = getattr(current_o_model.model.volatility,'o', 0)
+    o_val = getattr(current_o_model.model.volatility, 'o', 0)
 
     Model = arch_model(window, mean='constant', lags=0, vol=vol_str, p=p_val, q=q_val, o=o_val, power=power_val, dist=dist_arg, rescale=False)
     res = Model.fit(disp='off')
   #DF = res.params['nu']
-  forecasts = res.forecast()
-  f_v=forecasts.variance.iloc[-1,0]
-  f_SD =np.sqrt(f_v)
+    forecasts = res.forecast()
+    f_v=forecasts.variance.iloc[-1,0]
+    f_SD =np.sqrt(f_v)
   #VaR_N= f_SD*norm.ppf(alpha)*value
   #VaR_t=f_SD*t.ppf(alpha,DF)*value
   #VaR_N_over_days = VaR_N*np.sqrt(T)
@@ -230,20 +230,20 @@ def compute_garch_risk(o_model, alpha,window):
   #ES_N_over_days =ES_N * np.sqrt(T)
 
 
-  if 'nu' in res.params:
-    DF = res.params['nu']
-    VaR_t=-f_SD*t.ppf(alpha,DF)
-    VaR_t_over_days = VaR_t
-    ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))
-    ES_t_over_days = ES_t 
-    return VaR_t_over_days, ES_t_over_days, res
+    if 'nu' in res.params:
+      DF = res.params['nu']
+      VaR_t=-f_SD*t.ppf(alpha,DF)
+      VaR_t_over_days = VaR_t
+      ES_t = f_SD*(t.pdf(t.ppf(alpha,DF),DF)/alpha)*((DF+ t.ppf(alpha,DF)**2)/(DF-1))
+      ES_t_over_days = ES_t 
+      return VaR_t_over_days, ES_t_over_days, res
 
-  else:
-    VaR_N= -f_SD*norm.ppf(alpha)
-    VaR_N_over_days = VaR_N
-    ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha 
-    ES_N_over_days =ES_N
-    return VaR_N_over_days,ES_N_over_days, res
+    else:
+      VaR_N= -f_SD*norm.ppf(alpha)
+      VaR_N_over_days = VaR_N
+      ES_N= f_SD*norm.pdf(norm.ppf(alpha))/alpha 
+      ES_N_over_days =ES_N
+      return VaR_N_over_days,ES_N_over_days, res
 
 
   #return VaR_N_over_days,VaR_t_over_days,ES_t_over_days,ES_N_over_days
