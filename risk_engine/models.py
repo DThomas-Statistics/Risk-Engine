@@ -132,6 +132,60 @@ def findGARCH(percent_vec):
 
     return fitted_objects[chosen_model]
 
+def findGARCH(percent_vec):
+  model_candidates = [
+      ("GARCH_model_N_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=0, power= 2.0, dist = 'normal', rescale = False)),
+      ("GARCH_model_t_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=0, power= 2.0, dist = 'StudentsT', rescale = False)),
+      ("GARCH_model_N_2", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=0, power= 2.0, dist = 'normal', rescale = False)),
+      ("GARCH_model_t_2", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=0, power= 2.0, dist = 'StudentsT', rescale = False)),
+      ("GARCH_model_N_3", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=0, power= 2.0, dist = 'normal', rescale = False)),
+      ("GARCH_model_t_3", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=0, power= 2.0, dist = 'StudentsT', rescale = False)),
+      ("EGARCH_t", arch_model(percent_vec,mean = 'constant', lags=0, vol='EGARCH', p=1, q=1, o=1, dist = 'StudentsT', rescale = False)),
+      ("EGARCH_N", arch_model(percent_vec,mean = 'constant', lags=0, vol='EGARCH', p=1, q=1, o=1, dist = 'Normal', rescale = False)),
+      ("TGARCH_model_t_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 1.0, dist = 'StudentsT', rescale = False)),
+      ("TGARCH_model_N_2", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=1, power= 1.0, dist = 'normal', rescale = False)),
+      ("TGARCH_model_t_2", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=2, q=1, o=1, power= 1.0, dist = 'StudentsT', rescale = False)),
+      ("TGARCH_model_N_3", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=1, power= 1.0, dist = 'normal', rescale = False)),
+      ("TGARCH_model_t_3", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=2, o=1, power= 1.0, dist = 'StudentsT', rescale = False)),
+      ("GJR_GARCH_t_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'StudentsT', rescale = False)),
+      ("GJR_GARCH_N_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'Normal', rescale = False))
+  ]
+
+  successful_fitted_models = {}
+  for name, model_instance in model_candidates:
+    try:
+      res=model_instance.fit(disp='off')
+      if res.optimization_result.success:
+        successful_fitted_models[name] = res
+      else:
+        print(f"Model {name} failed to converge (status {res.optimization_result.status}: {res.optimization_result.message}). Disqualifying.")
+    except Exception as e:
+      print(f"An error occurred while fitting model {name}: {e}. Disqualifying.")
+
+  if not successful_fitted_models:
+      print("No GARCH models converged successfully")
+      return None
+
+  scoreS = {}
+  for name, res in successful_fitted_models.items():
+      ll = res.loglikelihood
+      n = res.num_params
+      AIC = 2 * n - 2 * ll
+      BIC = n * np.log(len(percent_vec)) - 2 * ll
+      scoreS[name] = {"AIC": AIC, "BIC": BIC}
+
+  o_modelA = min(scoreS, key=lambda m: scoreS[m]["AIC"])
+  o_modelB = min(scoreS, key=lambda m: scoreS[m]["BIC"])
+
+  if o_modelA != o_modelB:
+      print(f"AIC and BIC do not agree. AIC chose {o_modelA}, BIC chose {o_modelB}. Using BIC's choice as it's stricter.")
+      chosen_model = o_modelB
+  else:
+    print(f"AIC and BIC agree, choosing {o_modelA}")
+    chosen_model = o_modelA
+
+  return successful_fitted_models[chosen_model]
+
 
 def compute_garch_risk(o_model, alpha,window):
   vol_type = o_model.model.volatility.name
