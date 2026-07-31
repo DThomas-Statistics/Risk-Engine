@@ -188,12 +188,31 @@ def findGARCH(percent_vec):
 
 
 def compute_garch_risk(o_model, alpha,window):
-  vol_type = o_model.model.volatility.name
-  dist_type = o_model.model.distribution.name
-  power_val = getattr(o_model.model.volatility, 'power', 2.0)
-  Model = arch_model(window,mean = 'constant', lags=0, vol = vol_type, p=o_model.model.volatility.p, q=o_model.model.volatility.q, o=o_model.model.volatility.o, power=power_val, dist = dist_type, rescale = False)
-  res=Model.fit(disp='off')
-  vol_type = res.model.volatility
+  current_o_model = o_model  
+    try:
+        from arch.univariate import EGARCH
+        if isinstance(current_o_model.model.volatility, EGARCH):
+            vol_str = 'EGARCH'
+        else:
+            vol_str = 'GARCH'
+    except ImportError:
+        vol_str = 'GARCH' 
+
+    dist_name_from_model = current_o_model.model.distribution.name
+    if dist_name_from_model == "Normal":
+        dist_arg = "normal"
+    elif dist_name_from_model in[ "StudentT", "Standardized Student's t"]:
+        dist_arg = "studentst"  
+    else:
+        dist_arg = dist_name_from_model.lower() 
+
+    power_val = getattr(current_o_model.model.volatility, 'power', 2.0)
+    p_val = current_o_model.model.volatility.p
+    q_val = current_o_model.model.volatility.q
+    o_val = getattr(current_o_model.model.volatility,'o', 0)
+
+    Model = arch_model(window, mean='constant', lags=0, vol=vol_str, p=p_val, q=q_val, o=o_val, power=power_val, dist=dist_arg, rescale=False)
+    res = Model.fit(disp='off')
   #DF = res.params['nu']
   forecasts = res.forecast()
   f_v=forecasts.variance.iloc[-1,0]
