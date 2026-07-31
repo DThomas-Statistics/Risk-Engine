@@ -94,7 +94,7 @@ def backtest(hist_percent_vec, BURNIN,alpha):
     else:
       di["G_breachoVaR"].append(0)
 
-    if t%100==0:
+    if t>100 and t%20==0:
       values = hist_percent_vec[t-BURNIN:t]
       total_D =len(di["H_breachoVaR"])
       #Historical
