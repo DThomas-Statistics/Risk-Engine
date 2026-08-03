@@ -53,6 +53,7 @@ def backtest(hist_percent_vec, BURNIN,alpha):
   ES_E_T=[]
   ES_E_G=[]
   for t in range(BURNIN,len(hist_percent_vec)):
+    backtest_t = t - BURNIN
     t1=t-BURNIN
     t2 =t
     window =hist_percent_vec[t1:t2]
@@ -94,7 +95,7 @@ def backtest(hist_percent_vec, BURNIN,alpha):
     else:
       di["G_breachoVaR"].append(0)
 
-    if t>100 and t%20==0:
+    if backtest_t >= 100:
       values = hist_percent_vec[t-BURNIN:t]
       total_D =len(di["H_breachoVaR"])
       #Historical
