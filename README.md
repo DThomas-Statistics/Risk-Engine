@@ -20,10 +20,14 @@ Clone the repository and install dependencies:
 ## Quick Start
 This example backtest notebook is included because the engine does not include data-cleaning utilities. It provides the user with a demonstration of its intended use.
 ```bash
-git clone https://github.com/DThomas-Statistics/Risk-Engine.git
-cd Risk-Engine
+# Clone the repository
+!git clone https://github.com/DThomas-Statistics/Risk-Engine.git
 
-pip install -r requirements.txt
+# Change directory
+%cd Risk-Engine
+
+# Install dependencies
+!pip install -r requirements.txt
 
 # Open notebooks/backtest_EXAMPLE.ipynb in your Jupyter or Colab environment
 ```
