@@ -14,7 +14,6 @@ In addition to computing these models, the project includes a backtesting functi
 * POF and CIT test for backtester validation
 * Additional statistical tools: ACF, Kurtosis and Ljung-Box test (WIP)
 
-* 
 ## Installation
 Clone the repository and install dependencies:
 
