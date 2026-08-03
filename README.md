@@ -25,8 +25,7 @@ cd Risk-Engine
 
 pip install -r requirements.txt
 
-notebooks/backtest_EXAMPLE.ipynb
-
+# Open notebooks/backtest_EXAMPLE.ipynb in your Jupyter or Colab environment
 ```
 ## Results Preview
 Below is a graph illustrating how the models performed relative to the expected breach rate found in notebooks/backtest_EXAMPLE.ipynb. In addition, our dynamic GARCH model successfully passed the POF and CIT.
