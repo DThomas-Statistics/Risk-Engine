@@ -1,5 +1,8 @@
-> ⚠️ **Work in Progress**  
-> This repository is an active work in progress, published early for professional visibility and employer review.
+⚠️ **Work in Progress**  
+⚠️ **Work in Progress**
+This project is intentionally published early for employer review.  
+Some sections are incomplete and occasional errors may appear as development continues.
+
 ---
 
 
