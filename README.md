@@ -30,7 +30,7 @@ notebooks/backtest_EXAMPLE.ipynb
 
 ```
 ## Results Preview
-
+Below is a graph to show how the models performed with a expected breach rate found in notebooks/backtest_EXAMPLE.ipynb. In addition, our dynamic GARCH model successfully passed the POF and CIT.
 <img width="1242" height="684" alt="image" src="https://github.com/user-attachments/assets/eff63899-8ea7-4ee5-bb2b-8e7457181e4c" />
 
 ## Sources
