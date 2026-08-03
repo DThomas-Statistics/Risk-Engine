@@ -2,3 +2,4 @@ yfinance
 numpy
 statsmodels
 arch
+pandas
