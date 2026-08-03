@@ -1,7 +1,6 @@
-⚠️ **Work in Progress**  
-⚠️ **Work in Progress**
-This project is intentionally published early for employer review.  
-Some sections are incomplete and occasional errors may appear as development continues.
+> ⚠️ **Work in Progress**  
+> This project is intentionally published early for employer review.  
+> Some sections are incomplete and occasional errors may appear as development continues.
 
 ---
 
