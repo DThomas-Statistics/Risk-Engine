@@ -150,7 +150,7 @@ def findGARCH(percent_vec):
       ("GJR_GARCH_t_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'StudentsT', rescale = False)),
       ("GJR_GARCH_N_1", arch_model(percent_vec,mean = 'constant', lags=0, vol = 'GARCH', p=1, q=1, o=1, power= 2.0, dist = 'Normal', rescale = False))
   ]
-
+#bug fix to assist with cleaning data
   successful_fitted_models = {}
   for name, model_instance in model_candidates:
     try:
@@ -158,10 +158,9 @@ def findGARCH(percent_vec):
       if res.optimization_result.success:
         successful_fitted_models[name] = res
       else:
-        print(f"Model {name} failed to converge (status {res.optimization_result.status}: {res.optimization_result.message}). Disqualifying.")
+        print(f"Model {name} failed to converge (status {res.optimization_result.status}:{res.optimization_result.message}). Disqualifying.")
     except Exception as e:
-      print(f"An error occurred while fitting model {name}: {e}. Disqualifying.")
-
+      print(f"An error occurred while fitting model {name}:{e}. Disqualifying.")
   if not successful_fitted_models:
       print("No GARCH models converged successfully")
       return None
