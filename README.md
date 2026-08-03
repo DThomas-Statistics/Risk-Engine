@@ -42,3 +42,4 @@ Clone the repository and install dependencies:
 git clone https://github.com/DThomas-Statistics/Risk-Engine.git
 cd Risk-Engine
 pip install -r requirements.txt
+notebooks/example_backtest.ipynb
