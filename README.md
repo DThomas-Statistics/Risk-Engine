@@ -1,6 +1,5 @@
 > ⚠️ **Work in Progress**  
-> Numerical edge cases and additional tests will be added soon.
-
+> This repository is an active work in progress, published early for professional visibility and employer review.
 ---
 
 
