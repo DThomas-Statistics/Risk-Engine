@@ -14,6 +14,7 @@ This project provides the framework to compute Value at Risk (VaR) and Expected 
 
 In addition to computing these models, the project includes a backtesting function and statistical hypothesis tests such as Proportion of Failures (POF) and Christoffersen Independence Test (CIT) to evaluate the risk engine.
 
+This project forms part of my quantitative coding portfolio and is intended to showcase my quantitative skills to employers.
 ## Features
 * Compute Value at Risk (VaR) and Expected Shortfall (ES)
 * Three baseline models: Historical, Normal and Student-t
