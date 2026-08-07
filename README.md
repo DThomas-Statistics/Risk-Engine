@@ -43,7 +43,8 @@ This example backtest notebook is included because the engine does not include d
 ## Results Preview
 Below is a graph illustrating how the models performed relative to the expected breach rate found in notebooks/backtest_EXAMPLE.ipynb. In addition, our dynamic GARCH model successfully passed the POF and CIT.
 (This test is slightly rushed and will be updated in time as currently I am preparing for applications, THANK YOU.)
-<img width="1242" height="684" alt="image" src="https://github.com/user-attachments/assets/eff63899-8ea7-4ee5-bb2b-8e7457181e4c" />
+<img width="1242" height="684" alt="image" src="https://github.com/user-attachments/assets/13ad9161-86bf-4933-a0c4-4818026b3732" />
+
 
 ## Sources
 This project draws heavily from **Financial Risk Forecasting** by Jon Danielsson for its simple foundation for financial forecasting and for further statistical and modelling understanding **Financial Econometrics** lecture notes by Kevin Sheppard. In addition to these primary sources, I have cited websites, documentation pages and forum discussions that provided guidance during development and were influential enough to be acknowledged.
