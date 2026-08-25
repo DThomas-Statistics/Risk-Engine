@@ -1,4 +1,4 @@
-def monte_carlo(Volatility,alpha,s,df):
+def Single_day_monte_carlo(Volatility,alpha,s,df):
   #need to add a df formula
   simulation = np.array(np.random.standard_t(df,s))
   Simulated_r= simulation*Volatility
