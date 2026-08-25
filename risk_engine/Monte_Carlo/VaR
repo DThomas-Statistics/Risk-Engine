@@ -1,6 +1,6 @@
 def monte_carlo(Volatility,alpha,s,df):
   #need to add a df formula
-  simulations = np.array(np.random.standard_t(df,s))
+  simulation = np.array(np.random.standard_t(df,s))
   Simulated_r= simulation*Volatility
   q=np.sort(Simulated_r)
   VaR = q[round(alpha*s)]
